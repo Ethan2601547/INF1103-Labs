@@ -4,20 +4,12 @@ print("My first post!")
 print("=====================================")
 
 
-username = "cool_creator"
-bio = "Fun Blogger"
-followers = 1000
+username = input("Enter your username: ")
+age = input("Enter your age: ")
+category = input("Enter your category: ")
 
-
-followers += 50  # Gained 50 new followers
-print("Day 1:", followers)
-
-followers -= 20  # Lost 20 followers
-print("Day 2:", followers)
-
-followers += 100  # Gained 100 new followers
-print("Day 3:", followers)
-
+print("\nInstagram Profile")
+print("====================")
 print("Username:", username)
-print("Bio:", bio)
-print("Followers:", followers)
+print("Age:", age)
+print("Category:", category)
