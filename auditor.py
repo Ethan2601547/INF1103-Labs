@@ -37,10 +37,14 @@ def main():
 
         # Requirement 7: Overstock alert for quantities exceeding 500
         if inventory > 500:
-            inventory -= 1 # Stopping at 500
             print("\n*** Overstock Alert!: Inventory exceeds 500 units! ***")
             print("Stopping input to prevent overstocking.\n")
             break
+
+    # Requirement 8: Reporting
+    print("\n==== Report ====")
+    print("Total Units Processed: {}".format(inventory))
+    print("Number of Failed/Rejected Entries: {}".format(failed_entries))
 
 if __name__ == "__main__":
     main()
