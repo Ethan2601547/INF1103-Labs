@@ -9,11 +9,18 @@ def main():
     print("==== Smart Inventory Auditor ====")
     print("Enter a stock quantity, or type 'quit' to stop.\n")
 
-    # Requirement 2: Loop until user types 'quit'
+    # Requirement 2: Loop until user types "quit"
     while True:
-        entry = input("Enter stock quantity: ").strip
+        entry = input("Enter stock quantity: ").strip()
 
         if entry.lower() == "quit":
             break
 
-main()
+        # Requirement 4: Reject invalid inputs
+        if not entry.isdigit():
+            print("Rejected: '{}' is not a valid input.".format(entry))
+            failed_entries += 1
+            continue
+
+if __name__ == "__main__":
+    main()
