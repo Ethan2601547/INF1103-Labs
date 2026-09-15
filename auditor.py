@@ -25,8 +25,15 @@ def main():
         # Requirement 3: Accepting stock values as integers
         quantity = int(entry)
 
+        # Requirement 5: Reject negative stock values
+        if quantity < 0:
+            print("Rejected: '{}' is a negative number.".format(entry))
+            failed_entries += 1
+            continue
 
-
+        # Requirement 6: Keep a running total of the inventory
+        inventory += quantity
+        print("Accepted. Current total: {}".format(inventory))
 
 if __name__ == "__main__":
     main()
