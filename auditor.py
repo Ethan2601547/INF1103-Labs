@@ -22,5 +22,11 @@ def main():
             failed_entries += 1
             continue
 
+        # Requirement 3: Accepting stock values as integers
+        quantity = int(entry)
+
+
+
+
 if __name__ == "__main__":
     main()
