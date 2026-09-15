@@ -17,7 +17,11 @@ def main():
             break
 
         # Requirement 4: Reject invalid inputs
-        if not entry.isdigit():
+        if entry.isdigit():
+            quantity = int(entry)
+        elif entry.startswith("-") and entry[1:].isdigit():
+            quantity = int(entry)
+        else:
             print("Rejected: '{}' is not a valid input.".format(entry))
             failed_entries += 1
             continue
@@ -37,8 +41,8 @@ def main():
 
         # Requirement 7: Overstock alert for quantities exceeding 500
         if inventory > 500:
-            print("\n*** Overstock Alert!: Inventory exceeds 500 units! ***")
-            print("Stopping input to prevent overstocking.\n")
+            print("\n*** OVERSTOCK ALERT: Inventory exceeds 500 units! ***")
+            print("Stopping intake immediately.\n")
             break
 
     # Requirement 8: Reporting
