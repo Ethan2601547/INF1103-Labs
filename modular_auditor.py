@@ -40,6 +40,7 @@ def calculate_tax(amount):
     Takes: amount (int)
     Returns: the tax owed on that delivery (float)
     """
+    return amount * 0.10
 
 
 def generate_report(total_units, failed_attempts):
