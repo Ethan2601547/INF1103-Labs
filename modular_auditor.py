@@ -55,45 +55,31 @@ def generate_report(total_units, failed_attempts):
 
 
 
-
-
 def main():
     # Requirement 1: Initialise inventory to zero
     inventory = 0
     failed_entries = 0
 
-    print("==== Smart Inventory Auditor ====")
+    print("==== Smart Inventory Auditor (Modular) ====")
     print("Enter a stock quantity, or type 'quit' to stop.\n")
 
     # Requirement 2: Loop until user types "quit"
     while True:
-        entry = input("Enter stock quantity: ").strip()
+        result = get_valid_input()
 
-        if entry.lower() == "quit":
+        if result == "quit":
             break
 
         # Requirement 4: Reject invalid inputs
-        if entry.isdigit():
-            quantity = int(entry)
-        elif entry.startswith("-") and entry[1:].isdigit():
-            quantity = int(entry)
-        else:
-            print("Rejected: '{}' is not a valid input.".format(entry))
+        if result is None:
             failed_entries += 1
             continue
 
-        # Requirement 3: Accepting stock values as integers
-        quantity = int(entry)
+        quantity = result
+        inventory = process_delivery(inventory, quantity)
+        tax = calculate_tax(quantity)
 
-        # Requirement 5: Reject negative stock values
-        if quantity < 0:
-            print("Rejected: '{}' is a negative number.".format(entry))
-            failed_entries += 1
-            continue
-
-        # Requirement 6: Keep a running total of the inventory
-        inventory += quantity
-        print("Accepted. Current total: {}".format(inventory))
+        print("Accepted. Delivery: {} | Tax owed: {:.2f} | Current total: {}".format(quantity, tax, inventory))
 
         # Requirement 7: Overstock alert for quantities exceeding 500
         if inventory > 500:
@@ -102,9 +88,7 @@ def main():
             break
 
     # Requirement 8: Reporting
-    print("\n==== Report ====")
-    print("Total Units Processed: {}".format(inventory))
-    print("Number of Failed/Rejected Entries: {}".format(failed_entries))
+    generate_report(inventory, failed_entries)
 
 if __name__ == "__main__":
     main()
