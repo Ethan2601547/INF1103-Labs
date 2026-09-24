@@ -23,7 +23,7 @@ def get_valid_input():
     else:
         print("Rejected: '{}' is not a valid input.".format(entry))
         return None
-
+    
 
 def process_delivery(current_total, new_value):
     """
@@ -31,6 +31,7 @@ def process_delivery(current_total, new_value):
     Takes: current_total (int), new_value (int)
     Returns: the updated total (int)
     """
+    return current_total + new_value
 
 
 def calculate_tax(amount):
