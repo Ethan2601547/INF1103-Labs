@@ -10,6 +10,19 @@ def get_valid_input():
     the string "quit" if the user wants to stop,
     or None if the entry was rejected.
     """
+    entry = input("Enter stock quantity:").strip()
+
+    if entry.lower() == "quit":
+        return "quit"
+
+    if entry.isdigit():
+        return int(entry)
+    elif entry.startswith("-") and entry[1:].isdigit():
+        print("Rejected: '{}' is a negative number.".format(entry))
+        return None
+    else:
+        print("Rejected: '{}' is not a valid input.".format(entry))
+        return None
 
 
 def process_delivery(current_total, new_value):
