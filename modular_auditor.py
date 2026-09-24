@@ -49,6 +49,9 @@ def generate_report(total_units, failed_attempts):
     Takes: total_units (int), failed_attempts (int)
     Returns: nothing
     """
+    print("\n==== Report ====")
+    print("Total Deliveries Processed: {}".format(total_units))
+    print("Number of Failed/Rejected Entries: {}".format(failed_attempts))
 
 
 
