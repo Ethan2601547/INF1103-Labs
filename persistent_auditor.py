@@ -24,6 +24,12 @@ def load_inventory():
     except Exception:
         return 0, []
 
+def save_inventory(total, history):
+    with open("inventory.txt", "w") as file:
+        file.write("Total Deliveries: {}\n".format(total))
+        for item in history:
+            file.write("Stock Quantity: {}\n".format(item))
+
 def get_valid_input():
     """
     Prompts the user for a single stock quantity and validates it.
@@ -88,6 +94,9 @@ def main():
         result = get_valid_input()
 
         if result == "quit":
+            #Requirement 3: Write-back - Save when user quits
+            save_inventory(inventory, history)
+            print("Data successfully saved to inventory.txt.")
             break
 
         if result is None:
@@ -106,6 +115,8 @@ def main():
         if inventory > 500:
             print("\n*** OVERSTOCK ALERT: Inventory exceeds 500 units! ***")
             print("Stopping intake immediately.\n")
+            save_inventory(inventory, history)
+            print("Data successfully saved to inventory.txt.")
             break
 
     generate_report(inventory, failed_entries)
