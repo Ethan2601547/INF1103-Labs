@@ -3,7 +3,7 @@
 import os
 
 #Requirement 1: Persistence
-def load_inventory():
+def load_inventory():                           #Requirement 4: Create function load_inventory()
     filename = "inventory.txt"
     if not os.path.exists(filename):
         return 0, []
@@ -24,25 +24,16 @@ def load_inventory():
     except Exception:
         return 0, []
 
-def save_inventory(total, history):
+def save_inventory(total, history):             #Requirement 4: Create function save_inventory()
     with open("inventory.txt", "w") as file:
-        file.write("Total Deliveries: {}\n".format(total))
+        file.write("{}\n".format(total))
         for item in history:
-            file.write("Stock Quantity: {}\n".format(item))
+            file.write("{}\n".format(item))
 
 def get_valid_input():
-    """
-    Prompts the user for a single stock quantity and validates it.
-    Takes: nothing
-    Returns: a non-negative integer on success,
-    the string "quit" if the user wants to stop,
-    or None if the entry was rejected.
-    """
     entry = input("Enter stock quantity:").strip()
-
     if entry.lower() == "quit":
         return "quit"
-
     if entry.isdigit():
         return int(entry)
     elif entry.startswith("-") and entry[1:].isdigit():
@@ -54,32 +45,18 @@ def get_valid_input():
     
 
 def process_delivery(current_total, new_value):
-    """
-    Adds one delivery to the running inventory total.
-    Takes: current_total (int), new_value (int)
-    Returns: the updated total (int)
-    """
     return current_total + new_value
 
 
 def calculate_tax(amount):
-    """
-    Calculates 10% tax on a single delivery.
-    Takes: amount (int)
-    Returns: the tax owed on that delivery (float)
-    """
     return amount * 0.10
 
 
-def generate_report(total_units, failed_attempts):
-    """
-    Prints the closing summary. Pure I/O function - no return value needed.
-    Takes: total_units (int), failed_attempts (int)
-    Returns: nothing
-    """
+def generate_report(total_units, failed_attempts, history):
     print("\n==== Report ====")
     print("Total Deliveries Processed: {}".format(total_units))
     print("Number of Failed/Rejected Entries: {}".format(failed_attempts))
+    print("Transaction History: {}".format(history))
 
 
 
@@ -87,7 +64,16 @@ def main():
     inventory, history = load_inventory()
     failed_entries = 0
 
-    print("==== Smart Inventory Auditor (Modular) ====")
+    print("==== Smart Inventory Auditor (Persistent) ====")
+    print("Loaded Previous Inventory Total: {}".format(inventory))
+
+    #Prevent starting intake if already over the limit of 500
+    if inventory > 500:
+        print("\n*** OVERSTOCK ALERT: Inventory already exceeds 500 units! ***")
+        print("Stopping intake immediately.\n")
+        generate_report(inventory, failed_entries, history)
+        return
+
     print("Enter a stock quantity, or type 'quit' to stop.\n")
 
     while True:
@@ -112,14 +98,15 @@ def main():
 
         print("Accepted. Delivery: {} | Tax owed: {:.2f} | Current total: {}".format(quantity, tax, inventory))
 
+        #Stop if current session total hits overstock limit of 500
         if inventory > 500:
             print("\n*** OVERSTOCK ALERT: Inventory exceeds 500 units! ***")
             print("Stopping intake immediately.\n")
             save_inventory(inventory, history)
             print("Data successfully saved to inventory.txt.")
             break
-
-    generate_report(inventory, failed_entries)
+    
+    generate_report(inventory, failed_entries, history)
 
 if __name__ == "__main__":
     main()
