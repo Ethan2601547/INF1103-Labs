@@ -78,21 +78,18 @@ def generate_report(total_units, failed_attempts):
 
 
 def main():
-    # Requirement 1: Initialise inventory to zero
-    inventory = 0
+    inventory, history = load_inventory()
     failed_entries = 0
 
     print("==== Smart Inventory Auditor (Modular) ====")
     print("Enter a stock quantity, or type 'quit' to stop.\n")
 
-    # Requirement 2: Loop until user types "quit"
     while True:
         result = get_valid_input()
 
         if result == "quit":
             break
 
-        # Requirement 4: Reject invalid inputs
         if result is None:
             failed_entries += 1
             continue
@@ -101,15 +98,16 @@ def main():
         inventory = process_delivery(inventory, quantity)
         tax = calculate_tax(quantity)
 
+        #Requirement 2: History Tracking using Python list (array)
+        history.append(quantity)
+
         print("Accepted. Delivery: {} | Tax owed: {:.2f} | Current total: {}".format(quantity, tax, inventory))
 
-        # Requirement 7: Overstock alert for quantities exceeding 500
         if inventory > 500:
             print("\n*** OVERSTOCK ALERT: Inventory exceeds 500 units! ***")
             print("Stopping intake immediately.\n")
             break
 
-    # Requirement 8: Reporting
     generate_report(inventory, failed_entries)
 
 if __name__ == "__main__":
