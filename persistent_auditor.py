@@ -2,6 +2,28 @@
 # Smart Inventory Auditor (Persistent Version)
 import os
 
+#Requirement 1: Persistence
+def load_inventory():
+    filename = "inventory.txt"
+    if not os.path.exists(filename):
+        return 0, []
+
+    try:
+        with open(filename, "r") as file:
+            lines = file.readlines()
+            if not lines:
+                return 0, []
+
+            total = int(lines[0].strip())
+            history = []
+            for line in lines[1:]:
+                if line.strip():
+                    history.append(int(line.strip()))
+
+            return total, history
+    except Exception:
+        return 0, []
+
 def get_valid_input():
     """
     Prompts the user for a single stock quantity and validates it.
