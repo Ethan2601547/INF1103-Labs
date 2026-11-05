@@ -1,7 +1,8 @@
 #main.py
 #Shows the menu, get user input, and calls the Iventory methods. Never changes product data directly.
 
-from product import Product
+from physical_product import PhysicalProduct
+from digital_product import DigitalProduct
 from inventory import Inventory
 from file_handler import save_inventory, load_inventory, inventory_file_exists
 
@@ -19,20 +20,39 @@ def get_non_negative_float(prompt):
             value = float(text)
             if value >= 0:
                 return value
-            print("Price cannot be negative.")
+            print("Value cannot be negative.")
         except ValueError:
             print("Invalid input. Please enter a valid number (eg. 299.99).")
+
+
+def get_product_type():
+    while True:
+        print("Product Type:")
+        print("1. Physical Product")
+        print("2. Digital Product")
+        choice = input("Choose product type (1-2): ").strip()
+        if choice == "1":
+            return "physical"
+        if choice == "2":
+            return "digital"
+        print("Invalid choice. Please enter 1 or 2.")
+        
 
 def create_sample_inventory():
     inventory = Inventory()
 
-    product1 = Product("P001", "Laptop", 1200.00, 15)
-    product2 = Product("P002", "Mouse", 25.50, 40)
-    product3 = Product("P003", "Keyboard", 45.00, 25)
+    product1 = PhysicalProduct("P001", "Laptop", 1200.00, 15, 2.5)
+    product2 = PhysicalProduct("P002", "Mouse", 25.50, 40, 1.0)
+    product3 = PhysicalProduct("P003", "Keyboard", 45.00, 25, 2.0)
+
+    product4 = DigitalProduct("P004", "Antivirus Software", 49.90, 100, 250.5)
+    product5 = DigitalProduct("P005", "Python E-Book", 12.00, 200, 8.5)
 
     inventory.add_product(product1)
     inventory.add_product(product2)
     inventory.add_product(product3)
+    inventory.add_product(product4)
+    inventory.add_product(product5)
     return inventory
 
 def handle_add(inventory):
@@ -50,11 +70,18 @@ def handle_add(inventory):
     if name == "":
         print("Product Name cannot be empty.")
         return
-    
+
+    product_type = get_product_type()
     price = get_non_negative_float("Price: ")
     stock = get_non_negative_int("Stock Quantity: ")
 
-    product = Product(product_id, name, price, stock)
+    if product_type == "physical":
+        weight = get_non_negative_float("Weight (kg): ")
+        product = PhysicalProduct(product_id, name, price, stock, weight)
+    else:
+        download_size = get_non_negative_float("Download Size (MB): ")
+        product = DigitalProduct(product_id, name, price, stock, download_size)
+
     if inventory.add_product(product):
         print(f"Product {product_id} added successfully.")
     else:
@@ -87,6 +114,7 @@ def handle_search(inventory):
     print("Product found:")
     print("-" * 48)
     product.display_information()
+    print(f"    Fulfillment: {product.get_fulfillment_info()}")
     print("-" * 48)
 
 def print_menu():

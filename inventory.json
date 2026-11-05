@@ -1,32 +1,50 @@
 [
     {
+        "type": "physical",
         "id": "P001",
         "name": "Laptop",
         "price": 1200.0,
-        "stock": 15
+        "stock": 15,
+        "weight": 2.5
     },
     {
+        "type": "physical",
         "id": "P002",
         "name": "Mouse",
         "price": 25.5,
-        "stock": 50
+        "stock": 40,
+        "weight": 1.0
     },
     {
+        "type": "physical",
         "id": "P003",
         "name": "Keyboard",
         "price": 45.0,
-        "stock": 25
+        "stock": 25,
+        "weight": 2.0
     },
     {
+        "type": "digital",
         "id": "P004",
-        "name": "Monitor",
-        "price": 299.99,
-        "stock": 10
+        "name": "Antivirus Software",
+        "price": 49.9,
+        "stock": 100,
+        "download_size": 250.5
     },
     {
+        "type": "digital",
         "id": "P005",
-        "name": "Speaker",
-        "price": 129.99,
-        "stock": 20
+        "name": "Python E-Book",
+        "price": 12.0,
+        "stock": 200,
+        "download_size": 8.5
+    },
+    {
+        "type": "digital",
+        "id": "P006",
+        "name": "VPN Software",
+        "price": 89.99,
+        "stock": 50,
+        "download_size": 860.0
     }
 ]

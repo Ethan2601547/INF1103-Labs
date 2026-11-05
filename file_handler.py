@@ -4,7 +4,8 @@
 import json
 import os
 
-from product import Product
+from physical_product import PhysicalProduct
+from digital_product import DigitalProduct
 from inventory import Inventory
 
 INVENTORY_FILE = "inventory.json"
@@ -15,16 +16,43 @@ def inventory_file_exists(filename=INVENTORY_FILE):
 def save_inventory(inventory, filename=INVENTORY_FILE):
     records = []
     for product in inventory.get_products():
-        records.append({
-            "id": product.product_id,
-            "name": product.name,
-            "price": product.price,
-            "stock": product.stock,
-        })
+        record = {}
+
+        if isinstance(product, PhysicalProduct):
+            record["type"] = "physical"
+        elif isinstance(product, DigitalProduct):
+            record["type"] = "digital"
+        else:
+            print(f"Skipped product with unknown type: {product.product_id}.")
+            continue
+
+        record["id"] = product.product_id
+        record["name"] = product.name
+        record["price"] = product.price
+        record["stock"] = product.stock
+
+        if record["type"] == "physical":
+            record["weight"] = product.weight
+        else:
+            record["download_size"] = product.download_size
+
+        records.append(record)
 
     with open(filename, "w") as file:
         json.dump(records, file, indent=4)
     print(f"Inventory saved successfully to {filename}.")
+
+
+def create_product_from_record(record):
+    product_type = record["type"]
+    if product_type == "physical":
+        return PhysicalProduct(record["id"], record["name"], record["price"], record["stock"], record["weight"])
+    elif product_type == "digital":
+        return DigitalProduct(record["id"], record["name"], record["price"], record["stock"], record["download_size"])
+
+    else:
+        raise ValueError(f"Unknown product type: {product_type}.")
+
 
 def load_inventory(filename=INVENTORY_FILE):
     inventory = Inventory()
@@ -42,7 +70,7 @@ def load_inventory(filename=INVENTORY_FILE):
 
     for record in records:
         try:
-            product = Product(record["id"], record["name"], record["price"], record["stock"])
+            product = create_product_from_record(record)
             inventory.add_product(product)
         except (KeyError, ValueError, TypeError):
             print(f"Skipped an invalid record: {record}.")
