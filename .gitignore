@@ -1,0 +1,21 @@
+# Python Cache files
+__pycache__/
+*.py[cod]
+
+# Virtual Environments
+.venv/
+venv/
+
+# Local environment variables
+.env
+
+# IDE settings
+.vscode/
+.idea/
+
+# Old lab output files
+inventory.txt
+inventory-manager.txt
+logic-manager.txt
+persistent_auditor_log.txt
+*.code-workspace
