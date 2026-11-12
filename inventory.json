@@ -1,50 +1,75 @@
-[
-    {
-        "type": "physical",
-        "id": "P001",
-        "name": "Laptop",
-        "price": 1200.0,
-        "stock": 15,
-        "weight": 2.5
-    },
-    {
-        "type": "physical",
-        "id": "P002",
-        "name": "Mouse",
-        "price": 25.5,
-        "stock": 40,
-        "weight": 1.0
-    },
-    {
-        "type": "physical",
-        "id": "P003",
-        "name": "Keyboard",
-        "price": 45.0,
-        "stock": 25,
-        "weight": 2.0
-    },
-    {
-        "type": "digital",
-        "id": "P004",
-        "name": "Antivirus Software",
-        "price": 49.9,
-        "stock": 100,
-        "download_size": 250.5
-    },
-    {
-        "type": "digital",
-        "id": "P005",
-        "name": "Python E-Book",
-        "price": 12.0,
-        "stock": 200,
-        "download_size": 8.5
-    },
-    {
-        "type": "digital",
-        "id": "P006",
-        "name": "VPN Software",
-        "price": 89.99,
-        "stock": 50,
-        "download_size": 860.0
-    }
-]
+{
+    "suppliers": [
+        {
+            "supplier_id": "S001",
+            "name": "Tech Pte Ltd",
+            "contact_email": "sales@tech.example"
+        },
+        {
+            "supplier_id": "S002",
+            "name": "Popcorn Digital",
+            "contact_email": "orders@popcorn.example"
+        },
+        {
+            "supplier_id": "S003",
+            "name": "Labb Pte Ltd",
+            "contact_email": "r&d@labb.example"
+        }
+    ],
+    "products": [
+        {
+            "type": "physical",
+            "id": "P001",
+            "name": "Laptop",
+            "price": 1200.0,
+            "stock": 15,
+            "supplier_id": "S001",
+            "weight": 2.5
+        },
+        {
+            "type": "physical",
+            "id": "P002",
+            "name": "Mouse",
+            "price": 25.5,
+            "stock": 40,
+            "supplier_id": "S001",
+            "weight": 1.0
+        },
+        {
+            "type": "physical",
+            "id": "P003",
+            "name": "Keyboard",
+            "price": 45.0,
+            "stock": 25,
+            "supplier_id": "S001",
+            "weight": 2.0
+        },
+        {
+            "type": "digital",
+            "id": "P004",
+            "name": "Antivirus Software",
+            "price": 49.9,
+            "stock": 100,
+            "supplier_id": "S002",
+            "download_size": 250.5
+        },
+        {
+            "type": "digital",
+            "id": "P005",
+            "name": "Python E-Book",
+            "price": 12.0,
+            "stock": 200,
+            "supplier_id": "S002",
+            "download_size": 8.5
+        },
+        {
+            "type": "physical",
+            "id": "P006",
+            "name": "Speakers",
+            "price": 450.0,
+            "stock": 80,
+            "supplier_id": "S001",
+            "weight": 2.5
+        }
+    ]
+}
