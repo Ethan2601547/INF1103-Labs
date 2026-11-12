@@ -2,11 +2,13 @@
 #responsible for representing and managing a product
 
 from abc import ABC, abstractmethod
+from supplier import Supplier
 
 class Product(ABC):
-    def __init__(self, product_id, name, price, stock):
+    def __init__(self, product_id: str, name: str, price: float, stock: int, supplier: Supplier) -> None:
         self.__product_id = product_id
         self.__name = name
+        self.__supplier = Supplier = supplier
 
         price = float(price)
         if price < 0:
@@ -32,17 +34,21 @@ class Product(ABC):
     def stock(self):
         return self.__stock
 
-    def update_stock(self, quantity):
+    @property
+    def supplier(self) -> Supplier:
+        return self.__supplier
+
+    def update_stock(self, quantity: int) -> None:
         if not isinstance(quantity, int) or isinstance(quantity, bool):
             raise ValueError("Stock must be a whole number.")
         if quantity < 0:
             raise ValueError("Stock cannot be negative.")
         self.__stock = quantity
 
-    def display_information(self):
+    def display_information(self) -> None:
         print(f"ID: {self.__product_id} | Name: {self.__name} | Price: ${self.__price:.2f} | Stock: {self.__stock}")
 
     @abstractmethod
-    def get_fulfillment_info(self):
+    def get_fulfillment_info(self) -> str:
         """Return a message explaining how this product reaches the customer."""
         pass
