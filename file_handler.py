@@ -1,22 +1,35 @@
 #file_handler.py
 #responsible for saving and loading the inventory as JSON
+#hold 2 lists now: suppliers and products
+#each product refers to its supplier by supplier_id, which is how the association is maintained when saving and loading
 
 import json
 import os
+from typing import Any
 
 from physical_product import PhysicalProduct
 from digital_product import DigitalProduct
+from product import Product
+from supplier import Supplier
 from inventory import Inventory
 
 INVENTORY_FILE = "inventory.json"
 
-def inventory_file_exists(filename=INVENTORY_FILE):
+def inventory_file_exists(filename: str = INVENTORY_FILE) -> bool:
     return os.path.exists(filename)
 
-def save_inventory(inventory, filename=INVENTORY_FILE):
-    records = []
+def save_data(inventory: Inventory, suppliers: dict[str, Supplier], filename: str = INVENTORY_FILE) -> None:
+    supplier_records: list[dict[str, str]] = []
+    for supplier in suppliers.values():
+        supplier_records.append({
+            "supplier_id": supplier.supplier_id,
+            "name": supplier.name,
+            "contact_email": supplier.contact_email,
+        })
+
+    product_records: list[dict[str, str | int | float]] = []    
     for product in inventory.get_products():
-        record = {}
+        record: dict[str, str | int | float] = {}
 
         if isinstance(product, PhysicalProduct):
             record["type"] = "physical"
@@ -30,50 +43,64 @@ def save_inventory(inventory, filename=INVENTORY_FILE):
         record["name"] = product.name
         record["price"] = product.price
         record["stock"] = product.stock
+        record["supplier_id"] = product.supplier.supplier_id
 
-        if record["type"] == "physical":
+        if isinstance(product, PhysicalProduct):
             record["weight"] = product.weight
-        else:
+        elif isinstance(product, DigitalProduct):
             record["download_size"] = product.download_size
 
-        records.append(record)
+        product_records.append(record)
 
+    data = {"suppliers": supplier_records, "products": product_records}
     with open(filename, "w") as file:
-        json.dump(records, file, indent=4)
+        json.dump(data, file, indent=4)
     print(f"Inventory saved successfully to {filename}.")
 
 
-def create_product_from_record(record):
+def create_product_from_record(record: dict[str, Any], suppliers: dict[str, Supplier]) -> Product:
+    supplier = suppliers[record["supplier_id"]]
     product_type = record["type"]
     if product_type == "physical":
-        return PhysicalProduct(record["id"], record["name"], record["price"], record["stock"], record["weight"])
+        return PhysicalProduct(record["id"], record["name"], record["price"], record["stock"], supplier, record["weight"])
     elif product_type == "digital":
-        return DigitalProduct(record["id"], record["name"], record["price"], record["stock"], record["download_size"])
-
+        return DigitalProduct(record["id"], record["name"], record["price"], record["stock"], supplier, record["download_size"])
     else:
         raise ValueError(f"Unknown product type: {product_type}.")
 
 
-def load_inventory(filename=INVENTORY_FILE):
+def load_data(filename: str = INVENTORY_FILE) -> tuple[Inventory, dict[str, Supplier]]:
     inventory = Inventory()
+    suppliers: dict[str, Supplier] = {}
     if not os.path.exists(filename):
         print(f"{filename} not found. Starting with empty inventory.")
-        return inventory
+        return inventory, suppliers
 
     print(f"{filename} found.")
     try:
         with open(filename, "r") as file:
-            records = json.load(file)
+            data = json.load(file)
     except (json.JSONDecodeError, OSError):
         print("Could not read inventory file. Starting with empty inventory.")
-        return inventory
+        return inventory, suppliers
 
-    for record in records:
+    if not isinstance(data, dict):
+        print("This file is in the old format (no suppliers). Delete the file or replace it.")
+        return inventory, suppliers
+
+    for record in data.get("suppliers", []):
         try:
-            product = create_product_from_record(record)
+            supplier = Supplier(record["supplier_id"], record["name"], record["contact_email"])
+            suppliers[supplier.supplier_id] = supplier
+        except (KeyError, ValueError, TypeError):
+            print(f"Skipped an invalid supplier record: {record}.")
+
+    for record in data.get("products", []):
+        try:
+            product = create_product_from_record(record, suppliers)
             inventory.add_product(product)
         except (KeyError, ValueError, TypeError):
             print(f"Skipped an invalid record: {record}.")
 
     print(f"Inventory loaded successfully.")
-    return inventory
+    return inventory, suppliers
