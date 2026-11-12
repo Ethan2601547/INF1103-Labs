@@ -14,6 +14,11 @@
             "supplier_id": "S003",
             "name": "Labb Pte Ltd",
             "contact_email": "r&d@labb.example"
+        },
+        {
+            "supplier_id": "S004",
+            "name": "CourtsTech Pte Ltd",
+            "contact_email": "sales@courtstech.example"
         }
     ],
     "products": [
@@ -70,6 +75,15 @@
             "stock": 80,
             "supplier_id": "S001",
             "weight": 2.5
+        },
+        {
+            "type": "digital",
+            "id": "P007",
+            "name": "007 Game",
+            "price": 99.0,
+            "stock": 100,
+            "supplier_id": "S002",
+            "download_size": 40000.0
         }
     ]
 }

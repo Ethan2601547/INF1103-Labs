@@ -5,7 +5,7 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Copy our program into the container workspace
-COPY inventory_manager.py .
+COPY . .
 
 # Command that runs when the container starts
-CMD ["python", "inventory_manager.py"]
+CMD ["python", "main.py"]
