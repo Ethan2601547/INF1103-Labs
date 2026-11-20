@@ -11,8 +11,8 @@ class Product(ABC):
         self.__supplier: Supplier = supplier
 
         price = float(price)
-        if price < 0:
-            raise ValueError("Price cannot be negative.")
+        if price <= 0:
+            raise ValueError("Price must be greater than zero.")
         self.__price: float = price
 
         self.__stock: int = 0
