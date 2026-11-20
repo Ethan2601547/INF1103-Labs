@@ -14,6 +14,18 @@ def get_non_negative_int(prompt: str) -> int:
             return int(text)
         print("Invalid input. Please enter a whole number (0 or more).")
 
+def get_positive_float(prompt: str) -> float:
+    #keeps asking until the user gives a number greater than zero
+    while True:
+        try:
+            value = float(input(prompt))                #float("abc") raises ValueError
+            if value <= 0:
+                print("Please enter a number greater than zero.")
+                continue                                #ask again
+            return value
+        except ValueError:
+            print("Please enter a valid number, e.g. 12.50")
+
 def get_non_negative_float(prompt: str) -> float:
     while True:
         text = input(prompt).strip()
@@ -119,7 +131,7 @@ def handle_add(inventory: Inventory, suppliers: dict[str, Supplier]) -> None:
         return
 
     product_type = get_product_type()
-    price = get_non_negative_float("Price: ")
+    price = get_positive_float("Price: ")
     stock = get_non_negative_int("Stock Quantity: ")
 
     product: Product                                        #either subclass fits, because both ARE Products
