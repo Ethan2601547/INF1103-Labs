@@ -1,8 +1,7 @@
 #main.py
 #Shows the menu, gets user input, and calls the Inventory methods. Never changes product data directly.
 
-from physical_product import PhysicalProduct
-from digital_product import DigitalProduct
+from product_factory import ProductFactory
 from product import Product
 from supplier import Supplier
 from inventory import Inventory
@@ -62,12 +61,11 @@ def create_sample_data() -> tuple[Inventory, dict[str, Supplier]]:
     }
 
     #Products are then created with a reference to their Supplier
-    product1 = PhysicalProduct("P001", "Laptop", 1200.00, 15, supplier1, 2.5)
-    product2 = PhysicalProduct("P002", "Mouse", 25.50, 40, supplier1, 1.0)
-    product3 = PhysicalProduct("P003", "Keyboard", 45.00, 25, supplier1, 2.0)
-
-    product4 = DigitalProduct("P004", "Antivirus Software", 49.90, 100, supplier2, 250.5)
-    product5 = DigitalProduct("P005", "Python E-Book", 12.00, 200, supplier2, 8.5)
+    product1 = ProductFactory.create("physical", "P001", "Laptop", 1200.00, 15, supplier1, 2.5)
+    product2 = ProductFactory.create("physical", "P002", "Mouse", 25.50, 40, supplier1, 1.0)
+    product3 = ProductFactory.create("physical", "P003", "Keyboard", 45.00, 25, supplier1, 2.0)
+    product4 = ProductFactory.create("digital", "P004", "Antivirus Software", 49.90, 100, supplier2, 250.5)
+    product5 = ProductFactory.create("digital", "P005", "Python E-Book", 12.00, 200, supplier2, 8.5)
 
     #Inventory only gathers products that already exist (aggregation)
     inventory = Inventory()
@@ -125,13 +123,15 @@ def handle_add(inventory: Inventory, suppliers: dict[str, Supplier]) -> None:
     stock = get_non_negative_int("Stock Quantity: ")
 
     product: Product                                        #either subclass fits, because both ARE Products
+        #the extra value differs by type (only the prompt wording differs, the creation is left to the factory)
+    if product_type == "physical":
+        size = get_non_negative_float("Weight (kg): ")
+    else:
+        size = get_non_negative_float("Download Size (MB): ")
+
+    product: Product                                        #the factory returns a Product, whichever subclass it built
     try:
-        if product_type == "physical":
-            weight = get_non_negative_float("Weight (kg): ")
-            product = PhysicalProduct(product_id, name, price, stock, supplier, weight)
-        else:
-            download_size = get_non_negative_float("Download Size (MB): ")
-            product = DigitalProduct(product_id, name, price, stock, supplier, download_size)
+        product = ProductFactory.create(product_type, product_id, name, price, stock, supplier, size)
     except ValueError as error:
         print(f"Could not add product: {error}")
         return
