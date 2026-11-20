@@ -1,7 +1,7 @@
 #inventory.py
 #responsible for managing a collection of Products
-#aggregation: Inventory groups Product objects that already exist. It does not create them.
-#removing a Product from the Inventory does not destroy the Product.
+#aggregation: Inventory groups Product objects that already exist. It does not create them
+#removing a Product from the Inventory does not destroy the Product
 
 from product import Product                                               #for type hinting
 
