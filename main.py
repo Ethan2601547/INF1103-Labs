@@ -5,7 +5,7 @@ from product_factory import ProductFactory
 from product import Product
 from supplier import Supplier
 from inventory import Inventory
-from file_handler import save_data, load_data, inventory_file_exists
+from file_handler import save_data, load_data, load_products, inventory_file_exists
 
 def get_non_negative_int(prompt: str) -> int:
     while True:
@@ -153,6 +153,19 @@ def handle_add(inventory: Inventory, suppliers: dict[str, Supplier]) -> None:
     else:
         print(f"Product ID {product_id} already exists.")
 
+def handle_import(inventory: Inventory, suppliers: dict[str, Supplier]) -> None:
+    print("\nImport Products from CSV")
+    if len(suppliers) == 0:
+        print("No suppliers available. Please add a supplier first (option 6).")
+        return
+    supplier = choose_supplier(suppliers)                   #the CSV has no supplier column, so every imported product gets this one
+    if supplier is None:
+        return
+    path = input("CSV file (press Enter for products.csv): ").strip()
+    if path == "":
+        path = "products.csv"
+    load_products(path, inventory, supplier)
+
 def handle_update(inventory: Inventory) -> None:
     print("\nUpdate Stock")
     product_id = input("Enter Product ID to update: ").strip().upper()
@@ -193,7 +206,8 @@ def print_menu() -> None:
     print("4. Search for a Product")
     print("5. Save Inventory")
     print("6. Add a New Supplier")
-    print("7. Exit")
+    print("7. Import Products from CSV")
+    print("8. Exit")
     print("----------------------")
 
 def main() -> None:
@@ -209,7 +223,7 @@ def main() -> None:
 
     while True:
         print_menu()
-        choice = input("Enter option (1-7): ").strip()
+        choice = input("Enter option (1-8): ").strip()
 
         if choice == "1":
             inventory.display_all()
@@ -224,13 +238,14 @@ def main() -> None:
             save_data(inventory, suppliers)
         elif choice == "6":
             handle_add_supplier(suppliers)
-        elif choice == "7":
+        elif choice == "7": handle_import(inventory, suppliers)
+        elif choice == "8":
             print("Saving inventory before exiting...")
             save_data(inventory, suppliers)
             print("System exiting. Goodbye!")
             break
         else:
-            print("Invalid option. Please choose between 1-7.")
+            print("Invalid option. Please choose between 1-8.")
 
 if __name__ == "__main__":
     main()
