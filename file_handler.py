@@ -5,6 +5,9 @@
 
 import json
 import os
+
+import csv
+
 from typing import Any
 
 from physical_product import PhysicalProduct
@@ -102,3 +105,28 @@ def load_data(filename: str = INVENTORY_FILE) -> tuple[Inventory, dict[str, Supp
 
     print(f"Inventory loaded successfully.")
     return inventory, suppliers
+
+def load_products(path: str, inventory: Inventory, supplier: Supplier) -> None:
+    try:
+        file = open(path, newline="")
+    except FileNotFoundError:                                   
+        print(f"Products file not found: {path}")
+    else:                                                       
+        loaded = 0
+        with file:
+            reader = csv.reader(file)
+            next(reader, None)                                  
+            for row_number, row in enumerate(reader, start=2):  
+                try:
+                    product_type, product_id, name, price, stock_quantity = row     
+                    product = ProductFactory.create(product_type, product_id, name,
+                                                    float(price), int(stock_quantity), supplier)
+                    if inventory.add_product(product):
+                        loaded += 1
+                    else:
+                        print(f"Row {row_number} skipped: product ID {product_id} already exists.")
+                except ValueError as error:                     
+                    print(f"Row {row_number} skipped: {error}")
+        print(f"{loaded} products loaded.")
+    finally:                                                    
+        print("Load attempt finished.")
