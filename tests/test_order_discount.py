@@ -9,7 +9,7 @@ import unittest
 from supplier import Supplier
 from physical_product import PhysicalProduct
 from order import Order
-from discount_strategy import DiscountStrategy, NoDiscount, PercentageDiscount, BulkDiscount
+from discount_strategy import DiscountStrategy, NoDiscount, PercentageDiscount, BulkDiscount, StudentDiscount
 
 def make_order_worth_250(discount: DiscountStrategy | None = None) -> Order:
     supplier = Supplier("S001", "Test Supplier", "test@example.com")
@@ -32,6 +32,11 @@ class TestOrderDiscount(unittest.TestCase):
         self.assertAlmostEqual(order.calculate_total(), 225.0)
         order.set_discount(NoDiscount())
         self.assertEqual(order.calculate_total(), 250.0)
+
+    def test_new_strategy_works_without_changing_order(self) -> None:
+        order = make_order_worth_250()
+        order.set_discount(StudentDiscount())                   #added later, Order's code was not edited
+        self.assertAlmostEqual(order.calculate_total(), 237.5)
 
     def test_a_brand_new_strategy_defined_in_the_test_also_works(self) -> None:
         class HalfPrice(DiscountStrategy):

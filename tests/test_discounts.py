@@ -4,7 +4,7 @@
 
 import unittest
 
-from discount_strategy import DiscountStrategy, NoDiscount, PercentageDiscount, BulkDiscount
+from discount_strategy import DiscountStrategy, NoDiscount, PercentageDiscount, BulkDiscount, StudentDiscount
 
 class TestDiscountStrategies(unittest.TestCase):
     def test_no_discount_returns_total_unchanged(self) -> None:
@@ -22,6 +22,9 @@ class TestDiscountStrategies(unittest.TestCase):
 
     def test_bulk_discount_never_goes_negative(self) -> None:
         self.assertEqual(BulkDiscount(0, 50).apply(10.0), 0.0)
+
+    def test_student_discount_takes_5_percent_off(self) -> None:
+        self.assertAlmostEqual(StudentDiscount().apply(200.0), 190.0)
 
     def test_invalid_strategy_values_are_rejected(self) -> None:
         with self.assertRaises(ValueError):
