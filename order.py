@@ -31,11 +31,14 @@ class Order:
     def get_order_lines(self) -> list[OrderLine]:
         return list(self.__order_lines)                                      #returns a COPY of the list, so that the original list cannot be modified outside of this class
 
+    def set_discount(self, discount: DiscountStrategy) -> None:              # new method
+        self.__discount = discount
+
     def calculate_total(self) -> float:
         total = 0.0
         for order_line in self.__order_lines:
             total += order_line.calculate_subtotal()
-        return total
+        return self.__discount.apply(total)
 
     def display_information(self) -> None:
         print(f"Order {self.__order_id}")
@@ -45,11 +48,5 @@ class Order:
             order_line.display_information()
         print(f"    Total: ${self.calculate_total():.2f}")
 
-    def set_discount(self, discount: DiscountStrategy) -> None:     # new method
-        self.__discount = discount
 
-    def calculate_total(self) -> float:
-        total = 0.0
-        for order_line in self.__order_lines:
-            total += order_line.calculate_subtotal()
-        return self.__discount.apply(total)
+    
