@@ -12,6 +12,7 @@ from digital_product import DigitalProduct
 from product import Product
 from supplier import Supplier
 from inventory import Inventory
+from product_factory import ProductFactory
 
 INVENTORY_FILE = "inventory.json"
 
@@ -59,14 +60,11 @@ def save_data(inventory: Inventory, suppliers: dict[str, Supplier], filename: st
 
 
 def create_product_from_record(record: dict[str, Any], suppliers: dict[str, Supplier]) -> Product:
-    supplier = suppliers[record["supplier_id"]]
-    product_type = record["type"]
-    if product_type == "physical":
-        return PhysicalProduct(record["id"], record["name"], record["price"], record["stock"], supplier, record["weight"])
-    elif product_type == "digital":
-        return DigitalProduct(record["id"], record["name"], record["price"], record["stock"], supplier, record["download_size"])
-    else:
-        raise ValueError(f"Unknown product type: {product_type}.")
+        supplier = suppliers[record["supplier_id"]]
+        #a physical record stores "weight", a digital record stores "download_size"; the factory takes either as "size"
+        size = record.get("weight", record.get("download_size", 0.0))
+        return ProductFactory.create(record["type"], record["id"], record["name"], record["price"],
+                                     record["stock"], supplier, size)
 
 
 def load_data(filename: str = INVENTORY_FILE) -> tuple[Inventory, dict[str, Supplier]]:
